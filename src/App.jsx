@@ -79,6 +79,13 @@ function App() {
     setIsDetailModalOpen(true);
   };
 
+  //Closing Contact Details
+  const handleContactDetailClose = () => {
+    setIsDetailModalOpen(false); // start exit animation!
+    setTimeout(() => setSelectedContact(null), 300); // unmount contact after 300ms
+  };
+
+
   // Handle edit button (opens add modal WITH prefilled info)
   const handleEditContact = () => {
     setModalEditContact(selectedContact);
@@ -92,7 +99,7 @@ function App() {
       name: modalEditContact.name,
       email: modalEditContact.email,
       phone: modalEditContact.phone,
-      company: modalEditContact.company
+      // company: modalEditContact.company
     }
     : null;
 
@@ -123,10 +130,11 @@ function App() {
       <ContactDetailModal
         contact={selectedContact}
         isOpen={isDetailModalOpen}
-        onClose={() => { setIsDetailModalOpen(false); setSelectedContact(null); }}
+        onClose={handleContactDetailClose}
         onDelete={handleDeleteContact}
         onEdit={handleEditContact}
       />
+
       <Toaster position="top-right" />
     </div>
   );

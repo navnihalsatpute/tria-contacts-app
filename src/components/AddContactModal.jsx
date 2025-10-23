@@ -6,12 +6,27 @@ const AddContactModal = ({ isOpen, onClose, onAddContact, contacts, initialData 
         name: '',
         email: '',
         phone: '',
-        company: '',
+        // company: '',
     });
     const [avatarPreview, setAvatarPreview] = useState('');
     const [errors, setErrors] = useState({});
     const [duplicateWarning, setDuplicateWarning] = useState(null);
     const fileInputRef = useRef();
+
+    // ---- MODAL TRANSITION STATE ----
+    const [visible, setVisible] = useState(false);
+    const [animate, setAnimate] = useState(false);
+
+    useEffect(() => {
+        if (isOpen) {
+            setVisible(true);
+            setTimeout(() => setAnimate(true), 10); // Animate in after DOM mounts
+        } else {
+            setAnimate(false);
+            const timeout = setTimeout(() => setVisible(false), 300); // Duration matches transition
+            return () => clearTimeout(timeout);
+        }
+    }, [isOpen]);
 
     // Pre-fill form data for edit
     useEffect(() => {
@@ -20,7 +35,7 @@ const AddContactModal = ({ isOpen, onClose, onAddContact, contacts, initialData 
                 name: initialData.name || '',
                 email: initialData.email || '',
                 phone: initialData.phone || '',
-                company: initialData.company || '',
+                // company: initialData.company || '',
             });
             setAvatarPreview(initialData.avatar || '');
         } else {
@@ -28,7 +43,7 @@ const AddContactModal = ({ isOpen, onClose, onAddContact, contacts, initialData 
                 name: '',
                 email: '',
                 phone: '',
-                company: '',
+                // company: '',
             });
             setAvatarPreview('');
         }
@@ -37,19 +52,7 @@ const AddContactModal = ({ isOpen, onClose, onAddContact, contacts, initialData 
         if (fileInputRef.current) fileInputRef.current.value = "";
     }, [isOpen, initialData]);
 
-    const [show, setShow] = useState(false);
-    useEffect(() => {
-        if (isOpen) {
-            setShow(false);
-            // Animate in after mount
-            setTimeout(() => setShow(true), 10);
-        } else {
-            setShow(false);
-        }
-    }, [isOpen]);
-
-
-    // if (!isOpen) return null;
+    if (!visible) return null;
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -115,7 +118,7 @@ const AddContactModal = ({ isOpen, onClose, onAddContact, contacts, initialData 
             name: '',
             email: '',
             phone: '',
-            company: '',
+            // company: '',
         });
         setAvatarPreview('');
         setErrors({});
@@ -129,7 +132,7 @@ const AddContactModal = ({ isOpen, onClose, onAddContact, contacts, initialData 
             name: '',
             email: '',
             phone: '',
-            company: '',
+            // company: '',
         });
         setAvatarPreview('');
         setErrors({});
@@ -140,19 +143,17 @@ const AddContactModal = ({ isOpen, onClose, onAddContact, contacts, initialData 
 
     const isEditMode = !!initialData;
 
-    if (!isOpen) return null;
     return (
         <div className="fixed inset-0 z-50 overflow-y-auto">
             {/* Backdrop */}
             <div
-                className={`fixed inset-0 bg-black bg-opacity-50 transition-opacity duration-300 ${show ? "opacity-100" : "opacity-0"
-                    }`}
+                className={`fixed inset-0 bg-black bg-opacity-50 transition-opacity duration-300 ${animate ? "opacity-100" : "opacity-0"}`}
                 onClick={handleClose}
             />
             {/* Modal */}
             <div className="flex items-center justify-center min-h-screen px-4 py-8">
                 <div
-                    className={`relative bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full p-6 transform transition-all duration-300 ${show ? "scale-100 opacity-100" : "scale-95 opacity-0"}`}>
+                    className={`relative bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full p-6 transform transition-all duration-300 ${animate ? "scale-100 opacity-100" : "scale-95 opacity-0"}`}>
                     {/* Header */}
                     <div className="flex items-center justify-between mb-6">
                         <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{isEditMode ? 'Edit Contact' : 'Add New Contact'}</h2>
@@ -263,7 +264,7 @@ const AddContactModal = ({ isOpen, onClose, onAddContact, contacts, initialData 
                             />
                             {errors.email && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.email}</p>}
                         </div>
-                        {/* Company */}
+                        {/* Company
                         <div>
                             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                 Company <span className="text-gray-400 text-xs">(optional)</span>
@@ -276,7 +277,7 @@ const AddContactModal = ({ isOpen, onClose, onAddContact, contacts, initialData 
                                 className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all dark:bg-gray-700 dark:text-white"
                                 placeholder="Tech Solutions Ltd"
                             />
-                        </div>
+                        </div> */}
                         {/* Buttons */}
                         <div className="flex gap-3 pt-4">
                             <button type="button" onClick={handleClose} className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors font-medium">

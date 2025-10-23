@@ -26,7 +26,7 @@ const Header = ({ contactCount, onAddClick }) => {
                                 </svg>
                             </div>
                             <div>
-                                <h1 className="text-lg font-bold text-gray-900 dark:text-white">Contact Manager</h1>
+                                <h1 className="text-lg font-bold text-gray-900 dark:text-white">Contacts</h1>
                                 <p className="text-xs text-gray-500 dark:text-gray-400">{contactCount} contacts</p>
                             </div>
                         </div>
@@ -75,7 +75,7 @@ const Header = ({ contactCount, onAddClick }) => {
                             </svg>
                         </div>
                         <div>
-                            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Contact Manager</h1>
+                            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Contacts</h1>
                             <p className="text-sm text-gray-500 dark:text-gray-400">{contactCount} contacts</p>
                         </div>
                     </div>

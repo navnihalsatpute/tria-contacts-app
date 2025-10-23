@@ -1,30 +1,22 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 
 const ContactDetailModal = ({ contact, isOpen, onClose, onDelete, onEdit }) => {
     const [confirmDelete, setConfirmDelete] = useState(false);
+    const [visible, setVisible] = useState(false);
+    const [animate, setAnimate] = useState(false);
 
-    const [show, setShow] = useState(false);
     useEffect(() => {
         if (isOpen) {
-            setShow(false);
-            // Animate in after mount
-            setTimeout(() => setShow(true), 10);
+            setVisible(true);
+            setTimeout(() => setAnimate(true), 10); // Animate in after mount
         } else {
-            setShow(false);
+            setAnimate(false);
+            const timeout = setTimeout(() => setVisible(false), 300); // Delay unmount
+            return () => clearTimeout(timeout);
         }
     }, [isOpen]);
 
-    if (!isOpen) return null;
-
-    if (!contact) {
-        return (
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-30">
-                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full p-6 text-center text-gray-700 dark:text-gray-200">
-                    Loading...
-                </div>
-            </div>
-        );
-    }
+    if (!visible || !contact) return null;
 
     const handleEmail = () => {
         window.location.href = `mailto:${contact.email}`;
@@ -52,14 +44,12 @@ const ContactDetailModal = ({ contact, isOpen, onClose, onDelete, onEdit }) => {
         <div className="fixed inset-0 z-50 overflow-y-auto">
             {/* Backdrop */}
             <div
-                className={`fixed inset-0 bg-black bg-opacity-50 transition-opacity duration-300 ${show ? "opacity-100" : "opacity-0"
-                    }`}
+                className={`fixed inset-0 bg-black bg-opacity-50 transition-opacity duration-300 ${animate ? "opacity-100" : "opacity-0"}`}
                 onClick={onClose}
             />
             {/* Modal */}
             <div className="flex items-center justify-center min-h-screen px-4 py-8">
-                <div className={`relative bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-lg w-full p-8 transform transition-all duration-300 ${show ? "scale-100 opacity-100" : "scale-95 opacity-0"
-                    }`}>
+                <div className={`relative bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-lg w-full p-8 transform transition-all duration-300 ${animate ? "scale-100 opacity-100" : "scale-95 opacity-0"}`}>
                     {/* Close Button */}
                     <button
                         onClick={onClose}
@@ -79,11 +69,11 @@ const ContactDetailModal = ({ contact, isOpen, onClose, onDelete, onEdit }) => {
                         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
                             {contact.name}
                         </h2>
-                        {contact.company && (
+                        {/* {contact.company && (
                             <p className="text-gray-500 dark:text-gray-400 font-medium">
                                 {contact.company}
                             </p>
-                        )}
+                        )} */}
                     </div>
                     {/* Contact Details */}
                     <div className="space-y-4 mb-6">
@@ -153,7 +143,6 @@ const ContactDetailModal = ({ contact, isOpen, onClose, onDelete, onEdit }) => {
                             Delete
                         </button>
                     </div>
-
                     {/* Delete confirmation dialog */}
                     {confirmDelete && (
                         <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
