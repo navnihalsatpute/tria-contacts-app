@@ -16,7 +16,9 @@ const ContactCard = ({ contact, onClick }) => {
     };
 
     return (
-        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 hover:shadow-lg hover:border-blue-300 dark:hover:border-blue-600 transition-all duration-300 overflow-hidden group">
+        <div
+            className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 hover:shadow-lg hover:border-blue-300 dark:hover:border-blue-600 transition-all duration-300 ease-in-out hover:scale-[1.025] animate-fadeIn"
+        >
             <div className="p-6">
                 {/* Avatar and Name Section */}
                 <div className="flex items-center gap-4 mb-5">

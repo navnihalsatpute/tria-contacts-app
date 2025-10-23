@@ -1,7 +1,30 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from "react";
 
-const ContactDetailModal = ({ contact, isOpen, onClose }) => {
-    if (!isOpen || !contact) return null;
+const ContactDetailModal = ({ contact, isOpen, onClose, onDelete, onEdit }) => {
+    const [confirmDelete, setConfirmDelete] = useState(false);
+
+    const [show, setShow] = useState(false);
+    useEffect(() => {
+        if (isOpen) {
+            setShow(false);
+            // Animate in after mount
+            setTimeout(() => setShow(true), 10);
+        } else {
+            setShow(false);
+        }
+    }, [isOpen]);
+
+    if (!isOpen) return null;
+
+    if (!contact) {
+        return (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-30">
+                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full p-6 text-center text-gray-700 dark:text-gray-200">
+                    Loading...
+                </div>
+            </div>
+        );
+    }
 
     const handleEmail = () => {
         window.location.href = `mailto:${contact.email}`;
@@ -11,17 +34,32 @@ const ContactDetailModal = ({ contact, isOpen, onClose }) => {
         window.location.href = `tel:${contact.phone.replace(/\s/g, '')}`;
     };
 
+    const handleDelete = () => {
+        setConfirmDelete(true);
+    };
+
+    const confirmDeleteYes = () => {
+        onDelete(contact.id);
+        setConfirmDelete(false);
+        onClose();
+    };
+
+    const confirmDeleteNo = () => {
+        setConfirmDelete(false);
+    };
+
     return (
         <div className="fixed inset-0 z-50 overflow-y-auto">
             {/* Backdrop */}
             <div
-                className="fixed inset-0 bg-black bg-opacity-50 transition-opacity"
+                className={`fixed inset-0 bg-black bg-opacity-50 transition-opacity duration-300 ${show ? "opacity-100" : "opacity-0"
+                    }`}
                 onClick={onClose}
-            ></div>
-
+            />
             {/* Modal */}
             <div className="flex items-center justify-center min-h-screen px-4 py-8">
-                <div className="relative bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-lg w-full p-8 transform transition-all">
+                <div className={`relative bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-lg w-full p-8 transform transition-all duration-300 ${show ? "scale-100 opacity-100" : "scale-95 opacity-0"
+                    }`}>
                     {/* Close Button */}
                     <button
                         onClick={onClose}
@@ -31,7 +69,6 @@ const ContactDetailModal = ({ contact, isOpen, onClose }) => {
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                         </svg>
                     </button>
-
                     {/* Contact Info */}
                     <div className="text-center mb-6">
                         <img
@@ -48,23 +85,11 @@ const ContactDetailModal = ({ contact, isOpen, onClose }) => {
                             </p>
                         )}
                     </div>
-
                     {/* Contact Details */}
                     <div className="space-y-4 mb-6">
-                        {/* Phone */}
                         <div className="flex items-start gap-3 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                            <svg
-                                className="w-5 h-5 text-gray-600 dark:text-gray-300 flex-shrink-0 mt-0.5"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-                                />
+                            <svg className="w-5 h-5 text-gray-600 dark:text-gray-300 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                             </svg>
                             <div>
                                 <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Phone</p>
@@ -73,22 +98,10 @@ const ContactDetailModal = ({ contact, isOpen, onClose }) => {
                                 </p>
                             </div>
                         </div>
-
-                        {/* Email */}
                         {contact.email && (
                             <div className="flex items-start gap-3 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                                <svg
-                                    className="w-5 h-5 text-gray-600 dark:text-gray-300 flex-shrink-0 mt-0.5"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={2}
-                                        d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                                    />
+                                <svg className="w-5 h-5 text-gray-600 dark:text-gray-300 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                                 </svg>
                                 <div>
                                     <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Email</p>
@@ -99,12 +112,11 @@ const ContactDetailModal = ({ contact, isOpen, onClose }) => {
                             </div>
                         )}
                     </div>
-
                     {/* Action Buttons */}
-                    <div className="flex gap-3">
+                    <div className="flex flex-wrap gap-3">
                         <button
                             onClick={handleCall}
-                            className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors duration-200 font-medium"
+                            className="flex-1 min-w-[120px] flex items-center justify-center gap-2 px-4 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors duration-200 font-medium"
                         >
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
@@ -114,7 +126,7 @@ const ContactDetailModal = ({ contact, isOpen, onClose }) => {
                         {contact.email && (
                             <button
                                 onClick={handleEmail}
-                                className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 font-medium"
+                                className="flex-1 min-w-[120px] flex items-center justify-center gap-2 px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 font-medium"
                             >
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
@@ -122,7 +134,38 @@ const ContactDetailModal = ({ contact, isOpen, onClose }) => {
                                 Email
                             </button>
                         )}
+                        <button
+                            onClick={onEdit}
+                            className="flex-1 min-w-[120px] flex items-center justify-center gap-2 px-4 py-3 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg transition-colors duration-200 font-medium"
+                        >
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536M9 13h3v3H9v-3zM3 17.25V21h3.75l10.607-10.607a1.5 1.5 0 00-2.121-2.121L3 17.25z" />
+                            </svg>
+                            Edit
+                        </button>
+                        <button
+                            onClick={handleDelete}
+                            className="flex-1 min-w-[120px] flex items-center justify-center gap-2 px-4 py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors duration-200 font-medium"
+                        >
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19a2 2 0 01-2 2h-2a2 2 0 01-2-2m-4-2a2 2 0 002 2h8a2 2 0 002-2m2-10v10M5 7h14M9 7V5a3 3 0 016 0v2" />
+                            </svg>
+                            Delete
+                        </button>
                     </div>
+
+                    {/* Delete confirmation dialog */}
+                    {confirmDelete && (
+                        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+                            <div className="bg-white dark:bg-gray-900 rounded-lg p-6 flex flex-col items-center gap-4 shadow-lg border border-gray-100 dark:border-gray-700">
+                                <p className="text-lg font-medium text-gray-900 dark:text-white">Delete this contact?</p>
+                                <div className="flex gap-4 pt-2">
+                                    <button onClick={confirmDeleteYes} className="px-4 py-2 bg-red-600 text-white font-medium rounded-lg">Yes</button>
+                                    <button onClick={confirmDeleteNo} className="px-4 py-2 bg-gray-100 dark:bg-gray-700 dark:text-gray-300 text-gray-700 font-medium rounded-lg">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

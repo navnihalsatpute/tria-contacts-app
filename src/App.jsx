@@ -6,6 +6,8 @@ import AddContactModal from './components/AddContactModal';
 import ContactDetailModal from './components/ContactDetailModal';
 import { fetchContacts } from './data/mockData';
 import { searchContacts, sortContactsAlphabetically } from './utils/helpers';
+import { Toaster, toast } from 'react-hot-toast';
+
 
 function App() {
   const [contacts, setContacts] = useState([]);
@@ -13,95 +15,119 @@ function App() {
   const [searchTerm, setSearchTerm] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalEditContact, setModalEditContact] = useState(null); // For editing
   const [selectedContact, setSelectedContact] = useState(null);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
 
-  // Fetch contacts on mount (simulates API call)
+  // Fetch contacts on mount
   useEffect(() => {
     const loadContacts = async () => {
       setIsLoading(true);
       const data = await fetchContacts();
-      // Sort alphabetically
       const sorted = sortContactsAlphabetically(data);
       setContacts(sorted);
       setFilteredContacts(sorted);
       setIsLoading(false);
     };
-
     loadContacts();
   }, []);
 
-  // Handle search
+  // Search effect
   useEffect(() => {
     const results = searchContacts(contacts, searchTerm);
     setFilteredContacts(results);
   }, [searchTerm, contacts]);
 
-  // Add new contact or merge duplicate
+  // Add/Edit contact logic
   const handleAddContact = (newContact, isUpdate) => {
     let updatedContacts;
-
     if (isUpdate) {
-      // Update existing contact (merge)
+      // This path is for merging (duplicate handling)
       updatedContacts = contacts.map(contact =>
-        contact.id === newContact.id ? newContact : contact
+        contact.id === newContact.id ? { ...contact, ...newContact } : contact
       );
+      toast.success('Contact merged successfully!');
+    } else if (modalEditContact) {
+      // True edit mode: overwrite ALL fields including avatar with the newContact
+      updatedContacts = contacts.map(contact =>
+        contact.id === modalEditContact.id ? { ...newContact } : contact
+      );
+      toast.success('Contact updated!');
     } else {
-      // Add new contact
+      // Add new
       updatedContacts = [...contacts, newContact];
+      toast.success('Contact added!');
     }
-
-    // Sort alphabetically after adding/updating
     const sorted = sortContactsAlphabetically(updatedContacts);
     setContacts(sorted);
+    setModalEditContact(null);
   };
 
-  // Handle contact card click
+
+  // Delete contact
+  const handleDeleteContact = (contactId) => {
+    const updatedContacts = contacts.filter(contact => contact.id !== contactId);
+    setContacts(updatedContacts);
+    setSelectedContact(null);
+    setIsDetailModalOpen(false);
+    toast.success('Contact deleted!');
+  };
+
+  // Open Contact Details
   const handleContactClick = (contact) => {
     setSelectedContact(contact);
     setIsDetailModalOpen(true);
   };
 
+  // Handle edit button (opens add modal WITH prefilled info)
+  const handleEditContact = () => {
+    setModalEditContact(selectedContact);
+    setIsDetailModalOpen(false);
+    setIsModalOpen(true);
+  };
+
+  // AddContactModal gets "edit mode" if modalEditContact is set
+  const addContactInitial = modalEditContact
+    ? {
+      name: modalEditContact.name,
+      email: modalEditContact.email,
+      phone: modalEditContact.phone,
+      company: modalEditContact.company
+    }
+    : null;
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
-      {/* Header */}
       <Header
         contactCount={contacts.length}
-        onAddClick={() => setIsModalOpen(true)}
+        onAddClick={() => { setIsModalOpen(true); setModalEditContact(null); }}
       />
-
-      {/* Search Bar */}
       <SearchBar
         searchTerm={searchTerm}
         onSearchChange={setSearchTerm}
         resultCount={filteredContacts.length}
       />
-
-      {/* Contact List */}
       <ContactList
         contacts={filteredContacts}
         searchTerm={searchTerm}
         isLoading={isLoading}
         onContactClick={handleContactClick}
       />
-
-      {/* Add Contact Modal */}
       <AddContactModal
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        onClose={() => { setIsModalOpen(false); setModalEditContact(null); }}
         onAddContact={handleAddContact}
         contacts={contacts}
+        initialData={addContactInitial}
       />
-
-      {/* Contact Detail Modal */}
       <ContactDetailModal
         contact={selectedContact}
         isOpen={isDetailModalOpen}
-        onClose={() => {
-          setIsDetailModalOpen(false);
-          setSelectedContact(null);
-        }}
+        onClose={() => { setIsDetailModalOpen(false); setSelectedContact(null); }}
+        onDelete={handleDeleteContact}
+        onEdit={handleEditContact}
       />
+      <Toaster position="top-right" />
     </div>
   );
 }
