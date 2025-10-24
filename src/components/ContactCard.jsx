@@ -31,11 +31,11 @@ const ContactCard = ({ contact, onClick }) => {
                         <h3 className="text-lg font-semibold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                             {contact.name}
                         </h3>
-                        {contact.company && (
+                        {/* {contact.company && (
                             <p className="text-sm text-gray-500 dark:text-gray-400 font-medium">
                                 {contact.company}
                             </p>
-                        )}
+                        )} */}
                     </div>
                 </div>
 
