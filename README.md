@@ -1,51 +1,37 @@
 # **Contacts Manager App**
-A modern React contacts manager, designed with clarity, UX polish, and robust maintainability in mind.
+A modern React contacts manager app, this is my submission for the screening round for the role of Frontend Developer Intern at Tria
 
-This codebase demonstrates advanced front-end skills—clean interface, responsive design, accessibility, and mindful use of AI for enhanced productivity.
-
-## 👨‍💻 About the Project
-
-This project is my base template for professional-grade frontend development.
-
-It’s an opportunity to show my approach:
-
-Clean, organized code.
-
-Feature-rich, user-friendly design.
-
-Thoughtful technology choices and workflow.
+Live link:  (deployed on vercel)
 
 ## 🛠 Tech Stack & Tools
 
-React (with Hooks): Declarative, functional, easy to reason about and extend.
+React (with Hooks): Used Reactjs to create a well separated codebase by creating different components adn using React hooks for state management.
 
-Tailwind CSS: Utility-first CSS—great for rapid, maintainable, and responsive styling.
+Tailwind CSS: For Tailwind CSS, a great CSSS library for styling the whole app, used its in built classes for sections of different components and keeping the app responsive to varying device widths,
 
-CSS Transitions via React State: Modals and components animate smoothly with simple, maintainable logic (no heavy animation libraries).
+Transitions via React State: Used React State to add simple and smooth transitions for modals and components to animate their entry/exit.
 
-react-hot-toast: User-friendly notifications.
+React-hot-toast: Notifications/toasts for actions completion in the app.
 
-AI-Assisted Development: Used AI to accelerate workflow, but every design, logic, and style decision reflects my own best practices and judgment.
+AI-Assisted Development: Used AI to accelerate workflow by creating the basic skeleton through AI and then working on it as the base,  so that every design, logic, and style decision reflect my own best practices and judgment.
 
 ## ✨ Features
 
-Add, Edit, Delete Contacts: Robust form validation, duplicate prevention.
+1. Add, Edit, Delete Contacts: Create new contacts, edit existing ones and delete an existing contact if needed, added form validation for differnt fields like phone, email etc.
 
-Avatar Upload/Preview: User can upload local images for their contacts.
+2. Avatar Upload/Preview: User can upload local images from the system to set them as profile pictures.
 
-Responsive Modal Design: Animates modal open/close, adapts UX for mobile.
+3. Responsive Modal Design: Animates modal open/close actions, adapts UX for mobile.
 
-Dark Mode: Easy on the eyes, switchable with one click.
+4. Dark Mode: Dark mode toggle to easily switch from light mode to dark mode.
 
-Instant Feedback: Toast notifications for key user actions.
+5. Instant Feedback: Toast notifications for key user actions.
 
-Call/Email Actions: Direct actions via phone mailto/tel links.
+6. Call/Email Actions: Direct actions via phone mailto/tel links.
 
-Accessibility: ARIA roles, keyboard navigation, color contrast (Tailwind).
+7. Accessibility: ARIA roles, keyboard navigation, color contrast (Tailwind).
 
-No Company Field: Focused on pure contact information.
-
-Data Consistency: Every user action translates instantly to visible change.
+8. Data Consistency: Every user action translates instantly to visible change.
 
 ## 🧩 Project Structure & Maintainability
 
@@ -112,11 +98,11 @@ Practiced iterative refactoring, rapid prototyping, and detailed code reviews.
 
 ## 🗂 Future Extensions
 
-Sync to backend or cloud
+1. Sync to backend or cloud
 
-Import/export vCards/CSV
+2. Import/export vCards/CSV
 
-Contact groups/tags
+3. Contact groups/tags
 
-More advanced accessibility polish
+4. More advanced accessibility polish
 
