@@ -1,7 +1,7 @@
 # **Contacts Manager App**
 A modern React contacts manager app, this is my submission for the screening round for the role of Frontend Developer Intern at Tria
 
-Live link:  (deployed on vercel)
+Live link: https://tria-contacts-app.netlify.app/ (deployed on Netlify)
 
 ## 🛠 Tech Stack & Tools
 
